@@ -1,0 +1,19 @@
+version: '3'
+services:
+  thedailywhiskers:
+    build: TheDailyWhiskers
+    networks:
+      - prometheus_nw
+    hostname: thedailywhiskers
+
+  prometheus:
+    build: Prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - prometheus_nw
+    hostname: prometheus
+
+networks:
+  prometheus_nw:
+    driver: bridge
