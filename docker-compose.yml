@@ -13,6 +13,16 @@ services:
     networks:
       - prometheus_nw
     hostname: prometheus
+    volumes:
+      - /data/prometheus:/prometheus
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /data/portainer:/data
 
 networks:
   prometheus_nw:

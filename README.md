@@ -32,3 +32,6 @@ My personal Raspberry PI Docker cluster
 * Add some prometheus alerts
 * Have prometheus send email
 * Monitor underlying host with node_exporter
+* Better config and secrets injection
+* Set this up!  https://hub.docker.com/r/portainer/portainer/
+* Finish the tiny server, and put the radio on it.

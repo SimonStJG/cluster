@@ -18,10 +18,12 @@ RUN curl -Ls https://github.com/prometheus/prometheus/releases/download/v$PROMET
     cd /tmp && rm -rf prometheus-$PROMETHEUS_VERSION.linux-armv7
 
 ADD prometheus.yml /etc/prometheus/
+ADD alert.rules /etc/prometheus/
 
 EXPOSE     9090
 VOLUME     [ "/prometheus" ]
 WORKDIR    /prometheus
+
 ENTRYPOINT [ "/bin/prometheus" ]
 CMD        [ "-config.file=/etc/prometheus/prometheus.yml", \
              "-storage.local.path=/prometheus", \
