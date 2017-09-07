@@ -1,11 +1,5 @@
 version: '3'
 services:
-  thedailywhiskers:
-    build: TheDailyWhiskers
-    networks:
-      - prometheus_nw
-    hostname: thedailywhiskers
-
   prometheus:
     build: Prometheus
     ports:
@@ -23,6 +17,17 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /data/portainer:/data
+
+  thedailywhiskers:
+    build: TheDailyWhiskers
+    networks:
+      - prometheus_nw
+    hostname: thedailywhiskers
+
+  node_exporter:
+    build: NodeExporter
+    networks:
+      - prometheus_nw
 
 networks:
   prometheus_nw:

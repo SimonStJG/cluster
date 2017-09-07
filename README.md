@@ -18,20 +18,36 @@ My personal Raspberry PI Docker cluster
   * vim /etc/docker/daemon.json
   ```
   {
-   "hosts": ["tcp://192.168.1.173:2376", "fd://"]
+   "hosts": ["tcp://0.0.0.0:2376", "fd://"]
   }
   ```
   * sudo systemctl daemon-reload
   * sudo systemctl restart docker
+
+
 * Actually deploy it `DOCKER_HOST=192.168.1.173:2376 docker-compose up -d`
+
+OR
+In swarm mode:
+  DOCKER_HOST=192.168.1.173:2376 docker swarm init --advertise-addr 192.168.1.173
+  Then join workers as described in output of above job
+
+On host!
+DOCKER_HOST=192.168.1.173:2376  docker pull cblomart/rpi-registry
+DOCKER_HOST=192.168.1.173:2376 docker service create --name registry --publish 5000:5000 cblomart/rpi-registry
+
 
 # TODO #
 
+* Docker swarm oh yeah
+* Try and get prometheus to run on something smaller
+* * https://github.com/prometheus/busybox
 * Better security (don't expose 2376 unsecured)
 * Dailywhiskers doesn't shut down properly
 * Add some prometheus alerts
 * Have prometheus send email
 * Monitor underlying host with node_exporter
 * Better config and secrets injection
-* Set this up!  https://hub.docker.com/r/portainer/portainer/
 * Finish the tiny server, and put the radio on it.
+* Add grafana for prometheus
+
