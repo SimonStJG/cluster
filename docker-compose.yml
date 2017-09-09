@@ -29,6 +29,11 @@ services:
     networks:
       - prometheus_nw
 
+  tinyserver:
+    build: TinyServer
+    ports:
+      - "80:80"
+
 networks:
   prometheus_nw:
     driver: bridge

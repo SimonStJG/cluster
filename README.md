@@ -39,10 +39,7 @@ DOCKER_HOST=192.168.1.173:2376 docker service create --name registry --publish 5
 
 # TODO #
 
-* Compress the nodeexporter into something reasonable - don't use make?
-
-* Finish the tiny server, and put the radio on it.
-* Expose to the world with DNS
+* Add prometheus to the tiny server?  This could be very hard.
 * Add grafana for prometheus
 * Have prometheus send email
 
