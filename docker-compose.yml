@@ -24,7 +24,7 @@ services:
       - prometheus_nw
     hostname: thedailywhiskers
 
-  node_exporter:
+  nodeexporter:
     build: NodeExporter
     networks:
       - prometheus_nw

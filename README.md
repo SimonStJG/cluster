@@ -39,15 +39,17 @@ DOCKER_HOST=192.168.1.173:2376 docker service create --name registry --publish 5
 
 # TODO #
 
+* Compress the nodeexporter into something reasonable - don't use make?
+
+* Finish the tiny server, and put the radio on it.
+* Expose to the world with DNS
+* Add grafana for prometheus
+* Have prometheus send email
+
 * Docker swarm oh yeah
 * Try and get prometheus to run on something smaller
 * * https://github.com/prometheus/busybox
 * Better security (don't expose 2376 unsecured)
 * Dailywhiskers doesn't shut down properly
-* Add some prometheus alerts
-* Have prometheus send email
-* Monitor underlying host with node_exporter
 * Better config and secrets injection
-* Finish the tiny server, and put the radio on it.
-* Add grafana for prometheus
 
