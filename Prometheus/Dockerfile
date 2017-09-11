@@ -1,11 +1,8 @@
-FROM arm32v7/debian:latest
+FROM arm32v6/alpine
 
-ENV DEBIAN_FRONTEND noninteractive
 ENV PROMETHEUS_VERSION 1.7.1
 
-RUN apt-get update && \
-    apt-get install -yq \
-            curl
+RUN apk add --update curl
 
 RUN curl -Ls https://github.com/prometheus/prometheus/releases/download/v$PROMETHEUS_VERSION/prometheus-$PROMETHEUS_VERSION.linux-armv7.tar.gz | tar -xzC /tmp/ && \
     cd /tmp/prometheus-$PROMETHEUS_VERSION.linux-armv7 && \
