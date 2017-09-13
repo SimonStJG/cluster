@@ -2,6 +2,7 @@ version: '3'
 services:
   prometheus:
     build: Prometheus
+    image: 192.168.1.173:5000/prometheus
     ports:
       - "9090:9090"
     networks:
@@ -9,6 +10,9 @@ services:
     hostname: prometheus
     volumes:
       - /data/prometheus:/prometheus
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
   portainer:
     image: portainer/portainer
@@ -17,23 +21,31 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /data/portainer:/data
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  nodeexporter:
+    build: NodeExporter
+    image: 192.168.1.173:5000/nodeexporter
+    networks:
+      - prometheus_nw
+    deploy:
+      mode: global
 
   thedailywhiskers:
     build: TheDailyWhiskers
+    image: 192.168.1.173:5000/thedailywhiskers
     networks:
       - prometheus_nw
     hostname: thedailywhiskers
 
-  nodeexporter:
-    build: NodeExporter
-    networks:
-      - prometheus_nw
-
   tinyserver:
     build: TinyServer
+    image: 192.168.1.173:5000/tinyserver
     ports:
       - "80:80"
 
 networks:
   prometheus_nw:
-    driver: bridge
+    driver: overlay

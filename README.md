@@ -18,8 +18,10 @@ My personal Raspberry PI Docker cluster
   * vim /etc/docker/daemon.json
   ```
   {
-   "hosts": ["tcp://0.0.0.0:2376", "fd://"]
+   "hosts": ["tcp://192.168.1.173:2376", "fd://"],
+   "insecure-registries":["192.168.1.173:5000"]
   }
+
   ```
   * sudo systemctl daemon-reload
   * sudo systemctl restart docker
@@ -33,8 +35,10 @@ In swarm mode:
   Then join workers as described in output of above job
 
 On host!
-DOCKER_HOST=192.168.1.173:2376  docker pull cblomart/rpi-registry
-DOCKER_HOST=192.168.1.173:2376 docker service create --name registry --publish 5000:5000 cblomart/rpi-registry
+Start the registry
+docker-compose build
+docker-compose push
+docker stack deploy --compose-file docker-compose.yml foo
 
 
 # TODO #
