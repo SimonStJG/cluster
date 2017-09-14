@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 services:
   prometheus:
     build: Prometheus
@@ -32,6 +32,10 @@ services:
       - prometheus_nw
     deploy:
       mode: global
+      # TODO OMG WTF This took all day
+      # Need to write up an explanation
+      # See also config in prometheus.yml
+      endpoint_mode: dnsrr
 
   thedailywhiskers:
     build: TheDailyWhiskers
@@ -48,4 +52,5 @@ services:
 
 networks:
   prometheus_nw:
-    driver: overlay
+    # driver: overlay
+    external: true

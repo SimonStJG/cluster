@@ -38,19 +38,16 @@ On host!
 Start the registry
 docker-compose build
 docker-compose push
-docker stack deploy --compose-file docker-compose.yml foo
+docker stack deploy --compose-file docker-compose.yml t1 --prune
 
 
 # TODO #
 
+* Work out how to get prometheus to see the other nodes in the swarm?
+* Health Checks?
 * Add prometheus to the tiny server?  This could be very hard.
 * Add grafana for prometheus
 * Have prometheus send email
-
-* Docker swarm oh yeah
-* Try and get prometheus to run on something smaller
-* * https://github.com/prometheus/busybox
 * Better security (don't expose 2376 unsecured)
 * Dailywhiskers doesn't shut down properly
 * Better config and secrets injection
-

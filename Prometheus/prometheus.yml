@@ -2,9 +2,20 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'cluster'
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ['nodeexporter:9100', 'localhost:9090', 'thedailywhiskers:8000']
+      - targets: ['localhost:9090']
+
+  - job_name: 'thedailywhiskers'
+    static_configs:
+      - targets: ['thedailywhiskers:8000']
+
+  - job_name: 'nodeexporter'
+    dns_sd_configs:
+      - names:
+          - 'nodeexporter'
+        type: 'A'
+        port: 9100
 
 rule_files:
   - alert.rules
