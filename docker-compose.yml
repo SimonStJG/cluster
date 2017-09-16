@@ -37,9 +37,6 @@ services:
       - prometheus_nw
     deploy:
       mode: global
-      # TODO OMG WTF This took all day
-      # Need to write up an explanation
-      # See also config in prometheus.yml
       endpoint_mode: dnsrr
 
   # Services on workers

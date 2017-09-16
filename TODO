@@ -1,0 +1,4 @@
+* Grafana?  Very heavyweight
+* Have prometheus send email
+* Better config and secrets injection
+* Finish readme - components incl icon
