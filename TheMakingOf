@@ -1,0 +1,103 @@
+Docker Swarm on Raspberry Pis
+=============================
+
+Seem to be rather a lot of good articles about building a [Docker](https://www.docker.com/) cluster of [Raspberry PIs](https://www.raspberrypi.org/), but they often neglect details of how to get them to actually swarm, and then how to run a useful stack on them.
+
+TODO Everything is on ARM, and there are fewer officially supported packages for arm.  Portainer is an exception - how does it even work?
+
+Components
+===========
+
+Doesn't really matter, you can shove any old hardware together and it will be OK.  I originally built this with a model 3 B+ and an older model ? which only has 256MB of memory.  This proved not quite enough in practise, so be careful trying to run too many containers on one of them.
+
+Component parts
+
+Raspberry PIs
+Router
+Cables
+Glass dome?
+
+Setup stage
+===========
+
+## Prepare the raspberry pi
+
+There are raspberry pi docker images available, for example [from Hypriot](http://blog.hypriot.com/downloads/).  I went for building my own though, because why not.
+
+Start my downloading the [Raspbian lite image](https://www.raspberrypi.org/downloads/raspbian/), and copying it onto your SD card - there are instructions for this on the raspbian website.  We want to be able to ssh on to the pi straightaway, which you can't do by default.  To enable this, create an empty file called ssh on the /boot partition of the sd card (see [here](https://www.raspberrypi.org/documentation/remote-access/ssh/) for why this works.)  Now, boot up the pi with the new image.
+
+You don't want to leave the pi up for very long with ssh access enabled and only the default password, so:
+* Copy your ssh key onto the PI (for example with `ssh-copy-id pi@<ip>`)
+* Set `PasswordAuthentication No` in `/etc/ssh/sshd_config` on the pi
+* Restart the ssh service on the pi, with `sudo service ssh restart`.
+
+Now is a good time to set up a static IP for your new raspberry pi, otherwise it will make the next stages much more difficult. This can usually be done on your router.  You could also set your hostname to something more exciting with `sudo raspi-config`.
+
+## Install docker
+
+Now, time to install docker:
+* `sudo apt-get update && sudo apt-get upgrade`
+* `curl -sSL https://get.docker.com | sh`
+* Setup TLS certs, by following https://docs.docker.com/engine/security/https/#create-a-ca-server-and-client-keys-with-openssl
+* Allow connecting to the docker daemon remotely
+  * edit `/etc/systemd/system/multi-user.target.wants/docker.service` and remove the -H flag from the ExecStart line (otherwise this will override the changes in the point below)
+  * Edit `/etc/docker/daemon.json` to look like:
+  ```
+  {
+   "hosts": ["tcp://0.0.0.0:2376", "fd://"],
+   "insecure-registries":["<ip>:5000"],
+   "tls": true,
+   "tlsverify": true,
+   "tlscacert": "<cert path>/ca.pem",
+   "tlscert": "<cert path>/server-cert.pem",
+   "tlskey": "<cert path>/server-key.pem"
+  }
+  ```
+  The insecure registries line is only needed if you are running in swarm mode.   In fact, it shouldn't be required at all, I just haven't yet worked out how to secure my registry.
+* Restart docker: `sudo systemctl daemon-reload && sudo systemctl restart docker`.
+
+To set up more docker hosts, for example for worker nodes in a swarm, follow the instructions again, but reuse the CA certs from the first time.  If I could be bothered, I would turn these into ansible scripts, which would make this installation much more straightforward.
+
+## Start a swarm
+
+TODO Explain what is a worker and a manager node
+
+From the manager node: `docker swarm init --advertise-addr <manager ip>`.  This will print the necessary command to run on your worker node in order to join the swarm - so run it on the worker and you're good to go.
+
+## Deploy a stack
+
+TODO Explain what a registry is
+
+Start a registry on the manager node:
+cd Registry && ./build.sh && docker build . && docker run -p "5000:5000" --detach 5b81eef8da3d
+
+TODO link to my stuff
+For example, on my stack I run
+
+```
+docker-compose build  # Build all images
+docker-compose push   # Push all images to my local registry
+docker stack deploy --compose-file docker-compose.yml <stack name> --prune
+```
+
+# Awesome services to run on a Raspberry Pi swarm
+
+## Portainer
+
+## Monitoring
+
+Gone for Prometheus.  This is a monitoring solution with a blah blah architecture.
+
+You integrate it into various services using their client libraries.  Here's an example of integrating it into a tiny python app which I wrote some time ago.
+
+Show a nice graph, maybe of mem available?
+
+### Auto-detecting nodes
+
+Explain what the node_exporter is.
+
+In version 3.3 of the compose file, docker introduced DNS round robin endpoints.  Any DNS request to one of these endpoints will return the IP off all the tasks for this service.  Combining that
+
+## Tiny Server
+
+Explain busybox etc

@@ -14,18 +14,28 @@ My personal Raspberry PI Docker cluster
   * sudo service ssh restart
   * sudo apt-get update && sudo apt-get upgrade
   * curl -sSL https://get.docker.com | sh
+
+  * sudo raspi-config set hostname
+  * Do all the cert stuff
+  * * https://docs.docker.com/engine/security/https/#create-a-ca-server-and-client-keys-with-openssl
+
+  * You keep the same CA, for all nodes
+
   * vim /etc/systemd/system/multi-user.target.wants/docker.service and remove the -H flag
   * vim /etc/docker/daemon.json
   ```
   {
    "hosts": ["tcp://192.168.1.173:2376", "fd://"],
-   "insecure-registries":["192.168.1.173:5000"]
+   "insecure-registries":["192.168.1.173:5000"],
+   "tls": true,
+   "tlsverify": true,
+   "tlscacert": "/home/pi/certs/ca.pem",
+   "tlscert": "/home/pi/certs/server-cert.pem",
+   "tlskey": "/home/pi/certs/server-key.pem"
   }
-
   ```
   * sudo systemctl daemon-reload
   * sudo systemctl restart docker
-
 
 * Actually deploy it `DOCKER_HOST=192.168.1.173:2376 docker-compose up -d`
 
@@ -35,19 +45,14 @@ In swarm mode:
   Then join workers as described in output of above job
 
 On host!
-Start the registry
+cd Registry && ./build.sh && docker build . && docker run -p "5000:5000" --detach 5b81eef8da3d
+
 docker-compose build
 docker-compose push
 docker stack deploy --compose-file docker-compose.yml t1 --prune
 
-
 # TODO #
 
-* Work out how to get prometheus to see the other nodes in the swarm?
-* Health Checks?
-* Add prometheus to the tiny server?  This could be very hard.
-* Add grafana for prometheus
+* Grafana
 * Have prometheus send email
-* Better security (don't expose 2376 unsecured)
-* Dailywhiskers doesn't shut down properly
 * Better config and secrets injection

@@ -1,5 +1,8 @@
 version: '3.3'
 services:
+
+  # Services on the manager
+  #
   prometheus:
     build: Prometheus
     image: 192.168.1.173:5000/prometheus
@@ -25,6 +28,8 @@ services:
       placement:
         constraints: [node.role == manager]
 
+  # Global services
+  #
   nodeexporter:
     build: NodeExporter
     image: 192.168.1.173:5000/nodeexporter
@@ -37,20 +42,29 @@ services:
       # See also config in prometheus.yml
       endpoint_mode: dnsrr
 
+  # Services on workers
+  #
+  # When the workers can cope..
   thedailywhiskers:
     build: TheDailyWhiskers
     image: 192.168.1.173:5000/thedailywhiskers
     networks:
       - prometheus_nw
     hostname: thedailywhiskers
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
   tinyserver:
     build: TinyServer
     image: 192.168.1.173:5000/tinyserver
     ports:
       - "80:80"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
 networks:
   prometheus_nw:
-    # driver: overlay
+    driver: overlay
     external: true
