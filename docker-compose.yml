@@ -41,7 +41,6 @@ services:
 
   # Services on workers
   #
-  # When the workers can cope..
   thedailywhiskers:
     build: TheDailyWhiskers
     image: 192.168.1.173:5000/thedailywhiskers
@@ -50,7 +49,7 @@ services:
     hostname: thedailywhiskers
     deploy:
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role != manager]
 
   tinyserver:
     build: TinyServer
@@ -59,9 +58,8 @@ services:
       - "80:80"
     deploy:
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role != manager]
 
 networks:
   prometheus_nw:
     driver: overlay
-    external: true
