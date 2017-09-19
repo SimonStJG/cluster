@@ -11,11 +11,12 @@ scrape_configs:
       - targets: ['thedailywhiskers:8000']
 
   - job_name: 'nodeexporter'
-    dns_sd_configs:
-      - names:
-          - 'nodeexporter'
-        type: 'A'
-        port: 9100
+    static_configs:
+      - targets:
+        - 'gandalf:9100'
+        - 'frodo:9100'
+        - 'boromir:9100'
+        - 'faramir:9100'
 
 rule_files:
   - alert.rules

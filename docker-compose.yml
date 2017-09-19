@@ -5,7 +5,7 @@ services:
   #
   prometheus:
     build: Prometheus
-    image: 192.168.1.173:5000/prometheus
+    image: gandalf:5000/prometheus
     ports:
       - "9090:9090"
     networks:
@@ -32,33 +32,37 @@ services:
   #
   nodeexporter:
     build: NodeExporter
-    image: 192.168.1.173:5000/nodeexporter
+    image: gandalf:5000/nodeexporter
     networks:
       - prometheus_nw
     deploy:
       mode: global
-      endpoint_mode: dnsrr
 
   # Services on workers
   #
   thedailywhiskers:
     build: TheDailyWhiskers
-    image: 192.168.1.173:5000/thedailywhiskers
+    image: gandalf:5000/thedailywhiskers
     networks:
       - prometheus_nw
     hostname: thedailywhiskers
     deploy:
       placement:
-        constraints: [node.role != manager]
+        constraints:
+          - node.role != manager
+          # Frodo is too weak for this, OOMs.
+          - node.hostname != frodo
 
   tinyserver:
     build: TinyServer
-    image: 192.168.1.173:5000/tinyserver
+    image: gandalf:5000/tinyserver
     ports:
       - "80:80"
     deploy:
+      replicas: 2
       placement:
-        constraints: [node.role != manager]
+        constraints:
+          - node.role != manager
 
 networks:
   prometheus_nw:

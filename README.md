@@ -3,6 +3,12 @@
 
 TODO This section still a bit crap
 
+TODO Remove dnsrr section
+
+TODO Link to best practises eg. with docker-compose.
+
+TODO Mention hostnames
+
 Instructions on how to run Docker Swarm on a cluster of Raspberry Pis.  Covers the necessary components, setting up Docker, setting up Docker Swarm, and deploying some apps on your swarm.
 
 I'm going to assume that, since you're here, you know a bit about docker [Docker](https://docker.com) and what a [Raspberry Pi](https://www.raspberrypi.org/) is.
@@ -91,7 +97,7 @@ Unlike when running a single docker host, when you run a swarm, you need somewhe
 You must first build the arm binary and start the registry.  From the `Registry` directory, making sure that docker is pointing at your Raspberry Pi host:
 
 ```
-./build.sh && docker build . && docker run -p "5000:5000" --detach 5b81eef8da3d
+./build.sh && docker build . && docker-compose build start
 ```
 You may need to install the dependencies first, on Ubuntu these are: `golang-go`, `golang-go-linux-arm`.
 
