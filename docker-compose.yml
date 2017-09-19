@@ -37,6 +37,11 @@ services:
       - prometheus_nw
     deploy:
       mode: global
+      endpoint_mode: dnsrr
+    volumes:
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "/:/rootfs:ro"
 
   # Services on workers
   #

@@ -3,11 +3,11 @@
 
 TODO This section still a bit crap
 
-TODO Remove dnsrr section
-
 TODO Link to best practises eg. with docker-compose.
 
-TODO Mention hostnames
+TODO Mention hostnames.  Update insecure-registry too.
+
+TODO Note that they don't recommend nodeexporter is a container, but w/e https://github.com/prometheus/node_exporter
 
 Instructions on how to run Docker Swarm on a cluster of Raspberry Pis.  Covers the necessary components, setting up Docker, setting up Docker Swarm, and deploying some apps on your swarm.
 
