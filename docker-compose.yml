@@ -11,8 +11,6 @@ services:
     networks:
       - prometheus_nw
     hostname: prometheus
-    volumes:
-      - /data/prometheus:/prometheus
     deploy:
       placement:
         constraints: [node.role == manager]

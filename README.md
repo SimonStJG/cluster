@@ -97,7 +97,7 @@ Unlike when running a single docker host, when you run a swarm, you need somewhe
 You must first build the arm binary and start the registry.  From the `Registry` directory, making sure that docker is pointing at your Raspberry Pi host:
 
 ```
-./build.sh && docker build . && docker-compose build start
+./build.sh && docker-compose up -d --build
 ```
 You may need to install the dependencies first, on Ubuntu these are: `golang-go`, `golang-go-linux-arm`.
 
