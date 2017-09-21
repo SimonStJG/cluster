@@ -53,8 +53,6 @@ services:
       placement:
         constraints:
           - node.role != manager
-          # Frodo is too weak for this, OOMs.
-          - node.hostname != frodo
 
   tinyserver:
     build: TinyServer

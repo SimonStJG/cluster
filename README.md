@@ -3,11 +3,7 @@
 
 TODO This section still a bit crap
 
-TODO Link to best practises eg. with docker-compose.
-
-TODO Mention hostnames.  Update insecure-registry too.
-
-TODO Note that they don't recommend nodeexporter is a container, but w/e https://github.com/prometheus/node_exporter
+TODO Update services on portainer image to actually show services!
 
 Instructions on how to run Docker Swarm on a cluster of Raspberry Pis.  Covers the necessary components, setting up Docker, setting up Docker Swarm, and deploying some apps on your swarm.
 
@@ -52,7 +48,7 @@ You don't want to leave the pi up for very long with ssh access enabled and only
 * Set `PasswordAuthentication No` in `/etc/ssh/sshd_config` on the pi
 * Restart the ssh service on the pi, with `sudo service ssh restart`.
 
-Now is a good time to set up a static IP for your new raspberry pi, otherwise it will make the next stages much more difficult. This can usually be done on your router.  You could also set your hostname to something more exciting with `sudo raspi-config`.
+Now is a good time to set up a static IP for your new raspberry pi, otherwise it will make the next stages much more difficult. This can usually be done on your router.  You could also set your hostname to something more exciting with `sudo raspi-config`.  You could also set up hostnames, either by manually modifying the `/etc/hosts/` file on all your pis, and your local machine, and anywhere else you need it.  Or you could run a dns forwarder like [dnsmasq](https://wiki.debian.org/HowTo/dnsmasq).
 
 ## <img src="logos/docker-logo.png" height="40px"/> Docker Engine ##
 
@@ -110,6 +106,8 @@ docker-compose push   # Push all images to my local registry
 docker stack deploy --compose-file docker-compose.yml <stack name> --prune
 ```
 
+This is obviously not designed to be a best practise guide on deploying stacks, just a way to get it up and running.  [This is a best practise guide](https://success.docker.com/Architecture/Docker_Reference_Architecture%3A_Development_Pipeline_Best_Practices_Using_Docker_EE).
+
 # <img src="logos/cat-emoji.png" height="40px"/> Services
 
 As mentioned before, if you run docker on a x86_64 machine, then you'll find that there are an enourmous number of official images which you can use.  For arm, which is what a Raspberry Pi is, there are fewer.  This means that we get to build a lot of our images from scratch.  The source code in this repository contains the means to build the following Raspberry Pi images:
@@ -131,13 +129,13 @@ Here's an image of these services running, from Portainer:
 
 [Prometheus](https://prometheus.io/) is a monitoring and alerting system.  It's essentially a big time series database, with a query language for inspecting the data, and an alerting system for notifying you if somethings up.  The Prometheus server scrapes a predefined list of targets (possibly found via some sort of service discovery).
 
-Here's a nice picture of memory usage on two nodes.  This is taken when I only had two Raspberry Pis in the cluster, an older one with 256Mb memory and a new one with 1Gb of memory.  You can see the available drop as I spin up another container.
+Here's a nice picture of the one minute load average with three nodes, as you can see they are not working very hard (there are 4 available CPUs on each node).
 
 <img src="logos/prometheus.png"/>
 
 Prometheus can integrate into various services using client libraries.  For example, if you look at the code for my silly python app [TheDailyWhiskers](https://github.com/SimonStJG/TheDailyWhiskers), you can see it integrated there (there is probably < 50 lines of code in the whole app, so pretty easy to see what's going on).
 
-Prometheus provide a service to expose metrics about the underlying host machine, eg. CPU and memory usage, disk IO, etc.  This service is called the Node Exporer.  The Node Exporter is also written in [Go](https://golang.org/) which makes it a pleasure to cross-compile and run on the Raspberry Pi - Go binaries contain all their static dependencies, so you can dump them in an otherwise empty Docker image and they will mostly just work.  Look at the example Dockerfile in the NodeExporter directory in this repo to see how easy this is.
+Prometheus provide a service to expose metrics about the underlying host machine, eg. CPU and memory usage, disk IO, etc.  This service is called the Node Exporer.  The Node Exporter is also written in [Go](https://golang.org/) which makes it a pleasure to cross-compile and run on the Raspberry Pi - Go binaries contain all their static dependencies, so you can dump them in an otherwise empty Docker image and they will mostly just work.  Look at the example Dockerfile in the NodeExporter directory in this repo to see how easy this is.  This isn't the recommended way to set up the NodeExporter (for good reason, see https://github.com/prometheus/node_exporter for more of an explanation), but this was an experiment to set up docker, not to follow all the best practises.
 
 ### Auto-detecting nodes
 

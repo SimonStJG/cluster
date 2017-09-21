@@ -1,4 +1,4 @@
-* Grafana?  Very heavyweight
-* Have prometheus send email
-* Better config and secrets injection
-* Finish readme - components incl icon
+* Have Prometheus send email
+* Add Grafana, looks tedious to cross-compile though.
+* Secrets injection
+* Versioning, not that I need, but then I never needed anything here anyway.
