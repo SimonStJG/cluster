@@ -1,4 +1,4 @@
 * Have Prometheus send email
 * Add Grafana, looks tedious to cross-compile though.
 * Secrets injection
-* Versioning, not that I need, but then I never needed anything here anyway.
+* Versioning, not that I need it, but then I never needed anything here anyway.
